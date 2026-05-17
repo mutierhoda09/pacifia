@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pacifia Sole Hub — Walk Bold. Live Bright.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rust: #B5451B;
+    --rust-dark: #8B3214;
+    --rust-light: #D4622A;
+    --coral: #E8724A;
+    --navy: #1E2A45;
+    --navy-light: #2D3F62;
+    --cream: #FBF5EE;
+    --warm-white: #FFF8F2;
+    --gold: #D4A853;
+    --text-dark: #1A1510;
+    --text-mid: #4A3728;
+    --text-light: #8B6B5A;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── Custom Cursor ── */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--rust);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1.5px solid var(--rust);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+  }
+  body:hover .cursor-ring { opacity: 1; }
+  a:hover ~ .cursor, button:hover ~ .cursor { width: 20px; height: 20px; }
+
+  /* ── Noise Overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    padding: 1.2rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s, backdrop-filter 0.4s, padding 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(251, 245, 238, 0.92);
+    backdrop-filter: blur(16px);
+    padding: 0.8rem 4rem;
+    box-shadow: 0 2px 40px rgba(181,69,27,0.08);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.75rem;
+    text-decoration: none;
+  }
+  .nav-logo img {
+    height: 48px; width: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--rust);
+  }
+  .nav-logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--rust-dark);
+    line-height: 1.1;
+  }
+  .nav-logo-text span { display: block; font-size: 0.6rem; font-weight: 400; letter-spacing: 0.2em; color: var(--text-light); font-family: 'DM Sans', sans-serif; text-transform: uppercase; }
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--navy);
+    position: relative;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0;
+    height: 1.5px;
+    width: 0;
+    background: var(--rust);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--rust); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: var(--rust);
+    color: white !important;
+    padding: 0.6rem 1.4rem;
+    border-radius: 2px;
+    transition: background 0.3s, transform 0.2s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { background: var(--rust-dark) !important; transform: translateY(-1px); }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--navy); border-radius: 2px; transition: 0.3s; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    background: var(--navy);
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 9rem 4rem 4rem 6rem;
+    position: relative; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--coral);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 1s 0.2s both;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block;
+    width: 32px; height: 1.5px;
+    background: var(--coral);
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 7vw, 7.5rem);
+    line-height: 0.92;
+    color: var(--cream);
+    animation: fadeUp 1s 0.35s both;
+    letter-spacing: 0.02em;
+  }
+  .hero-title em {
+    font-style: italic;
+    font-family: 'Playfair Display', serif;
+    color: var(--coral);
+    font-size: 0.75em;
+    line-height: 1.1;
+    display: block;
+  }
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1rem; font-weight: 300;
+    color: rgba(251,245,238,0.6);
+    line-height: 1.7;
+    max-width: 380px;
+    animation: fadeUp 1s 0.5s both;
+  }
+  .hero-actions {
+    margin-top: 2.5rem;
+    display: flex; gap: 1rem; align-items: center;
+    animation: fadeUp 1s 0.65s both;
+  }
+  .btn-primary {
+    background: var(--rust);
+    color: white;
+    padding: 1rem 2.2rem;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    border: none; cursor: pointer;
+    transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover {
+    background: var(--coral);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(181,69,27,0.4);
+  }
+  .btn-ghost {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border-bottom: 1px solid rgba(251,245,238,0.3);
+    padding-bottom: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .btn-ghost:hover { color: var(--coral); border-color: var(--coral); }
+  .hero-stats {
+    margin-top: 3.5rem;
+    display: flex; gap: 2.5rem;
+    animation: fadeUp 1s 0.8s both;
+  }
+  .stat { color: var(--cream); }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; color: var(--coral);
+    display: block; line-height: 1;
+  }
+  .stat-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(251,245,238,0.5); }
+
+  .hero-right {
+    position: relative; overflow: hidden;
+    animation: fadeIn 1.2s 0.4s both;
+  }
+  .hero-img-main {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+    transform: scale(1.05);
+    transition: transform 12s ease;
+  }
+  .hero-right:hover .hero-img-main { transform: scale(1); }
+  .hero-overlay-card {
+    position: absolute;
+    bottom: 2.5rem; left: -2rem;
+    background: var(--cream);
+    padding: 1.2rem 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: slideRight 1s 1s both;
+    min-width: 180px;
+  }
+  .hero-overlay-card .label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-light); }
+  .hero-overlay-card .value { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); margin-top: 0.25rem; }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: rgba(251,245,238,0.5);
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    animation: fadeIn 1s 1.2s both;
+    z-index: 3;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, rgba(251,245,238,0.5), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+  /* Big background text */
+  .hero-bg-text {
+    position: absolute;
+    bottom: -2rem; right: -1rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18vw;
+    color: rgba(255,255,255,0.025);
+    pointer-events: none;
+    line-height: 1; z-index: 1;
+    user-select: none;
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-strip {
+    background: var(--rust);
+    padding: 0.9rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .marquee-inner {
+    display: inline-flex;
+    animation: marquee 25s linear infinite;
+  }
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--cream);
+    padding: 0 2rem;
+    opacity: 0.9;
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .marquee-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--coral); opacity: 0.7; flex-shrink: 0; }
+
+  /* ── SECTIONS COMMON ── */
+  section { padding: 6rem 0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+  .section-tag {
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--rust); font-weight: 600;
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .section-tag::before { content: ''; width: 24px; height: 1.5px; background: var(--rust); flex-shrink: 0; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700; color: var(--navy);
+    line-height: 1.15;
+  }
+  .section-title em { font-style: italic; color: var(--rust); }
+
+  /* ── ABOUT ── */
+  #about { background: var(--warm-white); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .about-images {
+    position: relative;
+    height: 520px;
+  }
+  .about-img-1, .about-img-2 {
+    position: absolute;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  .about-img-1 {
+    width: 72%; height: 80%;
+    top: 0; left: 0;
+    box-shadow: 0 24px 64px rgba(30,42,69,0.15);
+    transition: transform 0.6s ease;
+  }
+  .about-img-1:hover { transform: scale(1.02); }
+  .about-img-2 {
+    width: 55%; height: 55%;
+    bottom: 0; right: 0;
+    border: 6px solid var(--cream);
+    box-shadow: 0 16px 48px rgba(30,42,69,0.12);
+    transition: transform 0.6s ease;
+  }
+  .about-img-2:hover { transform: scale(1.02); }
+  .about-badge {
+    position: absolute;
+    top: 50%; left: 55%;
+    transform: translate(-50%, -50%);
+    background: var(--rust);
+    color: white;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(181,69,27,0.4);
+    z-index: 3;
+    animation: rotateBadge 20s linear infinite;
+  }
+  .about-badge-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; line-height: 1; }
+  .about-badge-text { font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; line-height: 1.3; }
+  .about-content { padding-left: 1rem; }
+  .about-content p { color: var(--text-mid); line-height: 1.8; font-size: 1rem; margin-top: 1.5rem; }
+  .about-values {
+    margin-top: 2.5rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .value-item {
+    background: var(--cream);
+    border-left: 3px solid var(--rust);
+    padding: 0.9rem 1.2rem;
+    border-radius: 0 4px 4px 0;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .value-item:hover { transform: translateX(4px); box-shadow: 4px 4px 20px rgba(181,69,27,0.1); }
+  .value-item h4 { font-size: 0.85rem; font-weight: 600; color: var(--navy); }
+  .value-item p { font-size: 0.78rem; color: var(--text-light); margin-top: 0.25rem; line-height: 1.5; }
+
+  /* ── COLLECTION ── */
+  #collection { background: var(--cream); }
+  .collection-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 3rem;
+  }
+  .filter-tabs {
+    display: flex; gap: 0.5rem;
+  }
+  .filter-tab {
+    padding: 0.5rem 1.2rem;
+    font-size: 0.78rem; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 500;
+    background: transparent; border: 1.5px solid var(--navy);
+    color: var(--navy); border-radius: 2px; cursor: pointer;
+    transition: all 0.3s;
+  }
+  .filter-tab.active, .filter-tab:hover {
+    background: var(--navy); color: white;
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .product-card {
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.4s, box-shadow 0.4s;
+    cursor: pointer;
+  }
+  .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 64px rgba(30,42,69,0.12);
+  }
+  .product-card.featured {
+    grid-row: span 2;
+  }
+  .product-img-wrap {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: var(--cream);
+  }
+  .product-card.featured .product-img-wrap { aspect-ratio: 3/4; }
+  .product-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .product-card:hover .product-img-wrap img { transform: scale(1.08); }
+  .product-badge {
+    position: absolute;
+    top: 1rem; left: 1rem;
+    background: var(--rust);
+    color: white;
+    font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; font-weight: 600;
+    padding: 0.3rem 0.75rem; border-radius: 2px;
+  }
+  .product-badge.new { background: var(--navy); }
+  .product-actions {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+    transform: translateX(80px);
+    transition: transform 0.4s;
+  }
+  .product-card:hover .product-actions { transform: translateX(0); }
+  .action-btn {
+    width: 38px; height: 38px;
+    background: white;
+    border: none; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    font-size: 1rem;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .action-btn:hover { background: var(--rust); color: white; transform: scale(1.1); }
+  .product-info { padding: 1.2rem; }
+  .product-cat { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-light); }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--navy); margin-top: 0.2rem; }
+  .product-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 0.75rem; }
+  .product-price { font-weight: 700; font-size: 1rem; color: var(--rust); }
+  .product-add {
+    background: var(--navy);
+    color: white; border: none;
+    padding: 0.45rem 1rem;
+    font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; border-radius: 2px;
+    cursor: pointer; transition: background 0.3s;
+  }
+  .product-add:hover { background: var(--rust); }
+
+  /* ── WHY US ── */
+  #why { background: var(--navy); color: var(--cream); }
+  #why .section-tag { color: var(--coral); }
+  #why .section-tag::before { background: var(--coral); }
+  #why .section-title { color: var(--cream); }
+  #why .section-title em { color: var(--coral); }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+  .feature-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 2.5rem 1.8rem;
+    position: relative; overflow: hidden;
+    transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  }
+  .feature-card:hover {
+    background: rgba(181,69,27,0.12);
+    border-color: rgba(181,69,27,0.3);
+    transform: translateY(-4px);
+  }
+  .feature-icon {
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
+    display: block;
+    transition: transform 0.3s;
+  }
+  .feature-card:hover .feature-icon { transform: scale(1.15) rotate(-5deg); }
+  .feature-card h3 { font-size: 1rem; font-weight: 600; color: var(--cream); margin-bottom: 0.75rem; }
+  .feature-card p { font-size: 0.85rem; line-height: 1.7; color: rgba(251,245,238,0.6); }
+  .feature-num {
+    position: absolute;
+    bottom: 1rem; right: 1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem; color: rgba(255,255,255,0.04);
+    line-height: 1;
+  }
+
+  /* ── CATEGORIES ── */
+  #categories { background: var(--warm-white); }
+  .categories-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.2rem;
+    margin-top: 3rem;
+  }
+  .cat-card {
+    position: relative; overflow: hidden;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: box-shadow 0.4s;
+  }
+  .cat-card:hover { box-shadow: 0 20px 60px rgba(30,42,69,0.2); }
+  .cat-card.large { grid-row: span 2; }
+  .cat-img {
+    width: 100%; height: 100%;
+    min-height: 240px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+  .cat-card.large .cat-img { min-height: 500px; }
+  .cat-card:hover .cat-img { transform: scale(1.06); }
+  .cat-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(30,42,69,0.7) 0%, transparent 60%);
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.8rem;
+    transition: background 0.4s;
+  }
+  .cat-card:hover .cat-overlay { background: linear-gradient(to top, rgba(181,69,27,0.6) 0%, transparent 60%); }
+  .cat-label {
+    font-size: 0.65rem; letter-spacing: 0.25em;
+    text-transform: uppercase; color: rgba(255,255,255,0.7);
+  }
+  .cat-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    color: white; font-weight: 700;
+    margin-top: 0.2rem;
+  }
+  .cat-cta {
+    margin-top: 0.75rem;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--coral);
+    opacity: 0; transform: translateY(8px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .cat-card:hover .cat-cta { opacity: 1; transform: translateY(0); }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials { background: var(--cream); }
+  .testimonials-wrapper {
+    display: grid; grid-template-columns: 1fr 2fr;
+    gap: 5rem; align-items: start;
+    margin-top: 3rem;
+  }
+  .testimonial-nav {
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .testi-dot {
+    padding: 1rem 1.2rem;
+    border-left: 2px solid transparent;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .testi-dot.active { border-left-color: var(--rust); }
+  .testi-dot-name { font-weight: 600; font-size: 0.9rem; color: var(--navy); }
+  .testi-dot-label { font-size: 0.72rem; color: var(--text-light); }
+  .testimonial-cards { position: relative; min-height: 280px; }
+  .testi-card {
+    position: absolute; top: 0; left: 0; right: 0;
+    background: white;
+    border-radius: 4px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 40px rgba(30,42,69,0.08);
+    opacity: 0; transform: translateX(30px);
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: none;
+  }
+  .testi-card.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+  .testi-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; line-height: 1.8;
+    color: var(--text-mid); font-style: italic;
+  }
+  .testi-quote::before { content: '\201C'; font-size: 3rem; line-height: 0; vertical-align: -1rem; color: var(--rust); margin-right: 0.25rem; }
+  .testi-author {
+    display: flex; align-items: center; gap: 1rem;
+    margin-top: 1.8rem; padding-top: 1.5rem;
+    border-top: 1px solid rgba(30,42,69,0.08);
+  }
+  .testi-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    object-fit: cover; border: 2px solid var(--rust);
+  }
+  .testi-name { font-weight: 600; color: var(--navy); font-size: 0.9rem; }
+  .testi-role { font-size: 0.72rem; color: var(--text-light); }
+  .stars { color: var(--gold); font-size: 0.85rem; letter-spacing: 2px; margin-top: 0.2rem; }
+
+  /* ── CTA BANNER ── */
+  #cta-banner {
+    background: var(--rust);
+    position: relative; overflow: hidden;
+    padding: 5rem 0;
+    text-align: center;
+  }
+  #cta-banner::before {
+    content: 'SOLE';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30vw; color: rgba(255,255,255,0.04);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; white-space: nowrap;
+  }
+  .cta-tag { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.7); }
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    color: white; margin: 0.5rem 0 1.5rem;
+    letter-spacing: 0.04em;
+    position: relative; z-index: 1;
+  }
+  .cta-sub { color: rgba(255,255,255,0.75); max-width: 500px; margin: 0 auto 2.5rem; font-size: 1rem; line-height: 1.7; position: relative; z-index: 1; }
+  .btn-white {
+    background: white; color: var(--rust);
+    padding: 1rem 2.5rem;
+    text-decoration: none; border-radius: 2px;
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    display: inline-block; position: relative; z-index: 1;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: none; cursor: pointer;
+  }
+  .btn-white:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--navy); }
+  #contact .section-tag { color: var(--coral); }
+  #contact .section-tag::before { background: var(--coral); }
+  #contact .section-title { color: var(--cream); }
+  #contact .section-title em { color: var(--coral); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; margin-top: 3.5rem; }
+  .contact-info-list { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .contact-icon {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(181,69,27,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+    border: 1px solid rgba(181,69,27,0.25);
+  }
+  .contact-item-text strong { display: block; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(251,245,238,0.5); }
+  .contact-item-text span { color: var(--cream); font-size: 0.95rem; }
+  .social-links { margin-top: 2rem; display: flex; gap: 0.75rem; }
+  .social-btn {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; font-size: 1rem;
+    color: var(--cream); transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  }
+  .social-btn:hover { background: var(--rust); border-color: var(--rust); transform: translateY(-3px); }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(251,245,238,0.5); }
+  .form-group input, .form-group textarea, .form-group select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px; padding: 0.85rem 1rem;
+    color: var(--cream); font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; outline: none;
+    transition: border-color 0.3s, background 0.3s;
+    width: 100%;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    border-color: var(--rust);
+    background: rgba(181,69,27,0.08);
+  }
+  .form-group textarea { resize: none; min-height: 110px; }
+  .form-group select option { background: var(--navy); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0E1520;
+    padding: 4rem 0 2rem;
+    color: rgba(251,245,238,0.5);
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem; padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-brand { max-width: 280px; }
+  .footer-logo { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .footer-logo img { height: 44px; width: 44px; border-radius: 50%; border: 1.5px solid var(--rust); }
+  .footer-logo-text { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--cream); }
+  .footer-brand p { font-size: 0.85rem; line-height: 1.7; }
+  .footer-col h4 { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream); margin-bottom: 1.2rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col ul li a {
+    text-decoration: none; font-size: 0.85rem;
+    color: rgba(251,245,238,0.5);
+    transition: color 0.3s;
+  }
+  .footer-col ul li a:hover { color: var(--coral); }
+  .footer-bottom { padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; }
+  .footer-bottom a { color: var(--coral); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes scrollPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+  @keyframes rotateBadge { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ── MOBILE NAV ── */
+  .mobile-menu {
+    position: fixed; inset: 0;
+    background: var(--navy);
+    z-index: 400;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 2rem;
+    transform: translateX(100%);
+    transition: transform 0.4s ease;
+  }
+  .mobile-menu.open { transform: translateX(0); }
+  .mobile-menu a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; letter-spacing: 0.08em;
+    color: var(--cream); text-decoration: none;
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--coral); }
+  .mobile-close {
+    position: absolute; top: 1.5rem; right: 2rem;
+    background: none; border: none; cursor: pointer;
+    font-size: 1.8rem; color: var(--cream);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .product-card.featured { grid-row: span 1; }
+    .product-card.featured .product-img-wrap { aspect-ratio: 4/3; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .about-grid, .contact-grid, .testimonials-wrapper { grid-template-columns: 1fr; gap: 3rem; }
+    .about-images { height: 380px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    #hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 8rem 2rem 4rem; }
+    .categories-grid { grid-template-columns: 1fr 1fr; }
+    .cat-card.large { grid-column: span 2; grid-row: span 1; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    nav.scrolled { padding: 0.75rem 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .products-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .categories-grid { grid-template-columns: 1fr; }
+    .cat-card.large { grid-column: span 1; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+    .collection-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    section { padding: 4rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose">✕</button>
+  <a href="#hero" onclick="closeMobile()">Home</a>
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#collection" onclick="closeMobile()">Collection</a>
+  <a href="#categories" onclick="closeMobile()">Categories</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">
+    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&h=100&fit=crop&crop=center" alt="Pacifia Sole Hub Logo" onerror="this.style.background='#B5451B';this.removeAttribute('src')">
+    <div class="nav-logo-text">
+      Pacifia Sole Hub
+      <span>Walk Bold. Live Bright.</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#contact" class="nav-cta">Shop Now</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text">SOLE</div>
+  <div class="hero-left">
+    <p class="hero-eyebrow">Nairobi's Finest Footwear</p>
+    <h1 class="hero-title">
+      Walk Bold.<br>
+      <em>Live Bright.</em>
+    </h1>
+    <p class="hero-sub">Premium footwear crafted for those who move with purpose. Style that speaks before you do.</p>
+    <div class="hero-actions">
+      <a href="#collection" class="btn-primary">Explore Collection →</a>
+      <a href="#about" class="btn-ghost">Our Story ↓</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">500+</span>
+        <span class="stat-label">Styles</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">5K+</span>
+        <span class="stat-label">Happy Customers</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Quality Assured</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img class="hero-img-main"
+      src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=900&h=1000&fit=crop&crop=center"
+      alt="Premium Footwear">
+    <div class="hero-overlay-card">
+      <div class="label">New Arrival</div>
+      <div class="value">Summer '25 Drop</div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <!-- duplicated for seamless loop -->
+    <span class="marquee-item"><span class="marquee-dot"></span> Sneakers</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Official Shoes</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Casual Wear</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Converse Style</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Fashion Footwear</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Unisex Collection</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Walk Bold. Live Bright.</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Sneakers</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Official Shoes</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Casual Wear</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Converse Style</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Fashion Footwear</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Unisex Collection</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Walk Bold. Live Bright.</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-images reveal">
+        <img class="about-img-1"
+          src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600&h=700&fit=crop&crop=center"
+          alt="Quality Footwear">
+        <img class="about-img-2"
+          src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=450&h=400&fit=crop&crop=center"
+          alt="Shoe Craftsmanship">
+        <div class="about-badge">
+          <span class="about-badge-num">★</span>
+          <span class="about-badge-text">Premium Quality</span>
+        </div>
+      </div>
+      <div class="about-content reveal reveal-delay-2">
+        <p class="section-tag">Who We Are</p>
+        <h2 class="section-title">Shoes Are More Than <em>Fashion</em></h2>
+        <p>Pacifia Sole Hub is a modern footwear company dedicated to providing stylish, comfortable, and high-quality shoes for everyday wear. We believe shoes are a statement of confidence, lifestyle, and personality.</p>
+        <p style="margin-top:0.8rem">Our goal is to become a trusted footwear brand known for quality products, affordability, and excellent customer service — serving Kenya and beyond.</p>
+        <div class="about-values">
+          <div class="value-item">
+            <h4>Quality</h4>
+            <p>Durable materials, premium craftsmanship</p>
+          </div>
+          <div class="value-item">
+            <h4>Integrity</h4>
+            <p>Honest pricing, genuine products</p>
+          </div>
+          <div class="value-item">
+            <h4>Innovation</h4>
+            <p>Trend-forward designs every season</p>
+          </div>
+          <div class="value-item">
+            <h4>Customer Focus</h4>
+            <p>Your satisfaction drives everything</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLLECTION -->
+<section id="collection">
+  <div class="container">
+    <div class="collection-header reveal">
+      <div>
+        <p class="section-tag">Shop Now</p>
+        <h2 class="section-title">Our <em>Collection</em></h2>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterProducts(this,'all')">All</button>
+        <button class="filter-tab" onclick="filterProducts(this,'sneakers')">Sneakers</button>
+        <button class="filter-tab" onclick="filterProducts(this,'formal')">Formal</button>
+        <button class="filter-tab" onclick="filterProducts(this,'casual')">Casual</button>
+      </div>
+    </div>
+    <div class="products-grid" id="productsGrid">
+
+      <div class="product-card featured reveal" data-cat="sneakers">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&h=700&fit=crop&crop=center" alt="Air Boost Pro">
+          <span class="product-badge">Bestseller</span>
+          <div class="product-actions">
+            <button class="action-btn" title="Wishlist">♡</button>
+            <button class="action-btn" title="Quick View">⊕</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <span class="product-cat">Sneakers</span>
+          <div class="product-name">Air Boost Pro</div>
+          <div class="product-bottom">
+            <span class="product-price">KSh 4,800</span>
+            <button class="product-add">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal reveal-delay-1" data-cat="formal">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=450&h=340&fit=crop&crop=center" alt="Oxford Classic">
+          <span class="product-badge new">New</span>
+          <div class="product-actions">
+            <button class="action-btn">♡</button>
+            <button class="action-btn">⊕</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <span class="product-cat">Formal</span>
+          <div class="product-name">Oxford Classic</div>
+          <div class="product-bottom">
+            <span class="product-price">KSh 5,500</span>
+            <button class="product-add">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal reveal-delay-2" data-cat="casual">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=450&h=340&fit=crop&crop=center" alt="Street Cruiser">
+          <div class="product-actions">
+            <button class="action-btn">♡</button>
+            <button class="action-btn">⊕</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <span class="product-cat">Casual</span>
+          <div class="product-name">Street Cruiser</div>
+          <div class="product-bottom">
+            <span class="product-price">KSh 3,200</span>
+            <button class="product-add">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal reveal-delay-1" data-cat="sneakers">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=450&h=340&fit=crop&crop=center" alt="Converse Edge">
+          <span class="product-badge new">New</span>
+          <div class="product-actions">
+            <button class="action-btn">♡</button>
+            <button class="action-btn">⊕</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <span class="product-cat">Converse Style</span>
+          <div class="product-name">Converse Edge</div>
+          <div class="product-bottom">
+            <span class="product-price">KSh 3,900</span>
+            <button class="product-add">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal reveal-delay-2" data-cat="formal">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1582897085656-c636d006a246?w=450&h=340&fit=crop&crop=center" alt="Executive Derby">
+          <div class="product-actions">
+            <button class="action-btn">♡</button>
+            <button class="action-btn">⊕</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <span class="product-cat">Official</span>
+          <div class="product-name">Executive Derby</div>
+          <div class="product-bottom">
+            <span class="product-price">KSh 6,200</span>
+            <button class="product-add">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-tag">Why Pacifia</p>
+      <h2 class="section-title">Built Around <em>You</em></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <span class="feature-icon">🏆</span>
+        <h3>Quality Products</h3>
+        <p>Durable and comfortable footwear crafted with superior materials that stand the test of time and fashion.</p>
+        <span class="feature-num">01</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <span class="feature-icon">💰</span>
+        <h3>Affordable Prices</h3>
+        <p>Competitively priced to ensure every customer gets genuine value for their money without compromising quality.</p>
+        <span class="feature-num">02</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <span class="feature-icon">✨</span>
+        <h3>Trendy Designs</h3>
+        <p>Always updated with current fashion trends to offer collections that keep you ahead of the style curve.</p>
+        <span class="feature-num">03</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-4">
+        <span class="feature-icon">🤝</span>
+        <h3>Customer First</h3>
+        <p>Building long-term relationships through reliable service, personalized care, and genuine commitment to your satisfaction.</p>
+        <span class="feature-num">04</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="container">
+    <div class="reveal" style="text-align:center; margin-bottom:0">
+      <p class="section-tag" style="justify-content:center">Browse</p>
+      <h2 class="section-title">Shop by <em>Category</em></h2>
+    </div>
+    <div class="categories-grid">
+      <div class="cat-card large reveal">
+        <img class="cat-img" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=900&fit=crop&crop=center" alt="Sneakers">
+        <div class="cat-overlay">
+          <span class="cat-label">Most Popular</span>
+          <div class="cat-name">Sneakers</div>
+          <span class="cat-cta">Shop Now →</span>
+        </div>
+      </div>
+      <div class="cat-card reveal reveal-delay-1">
+        <img class="cat-img" src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=450&h=380&fit=crop&crop=center" alt="Official Shoes">
+        <div class="cat-overlay">
+          <span class="cat-label">Professional</span>
+          <div class="cat-name">Official Shoes</div>
+          <span class="cat-cta">Shop Now →</span>
+        </div>
+      </div>
+      <div class="cat-card reveal reveal-delay-2">
+        <img class="cat-img" src="https://images.unsplash.com/photo-1527004013197-933b2fb6fc5e?w=450&h=380&fit=crop&crop=center" alt="Casual">
+        <div class="cat-overlay">
+          <span class="cat-label">Everyday</span>
+          <div class="cat-name">Casual Wear</div>
+          <span class="cat-cta">Shop Now →</span>
+        </div>
+      </div>
+      <div class="cat-card reveal reveal-delay-1">
+        <img class="cat-img" src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=450&h=380&fit=crop&crop=center" alt="Converse">
+        <div class="cat-overlay">
+          <span class="cat-label">Street Style</span>
+          <div class="cat-name">Converse Style</div>
+          <span class="cat-cta">Shop Now →</span>
+        </div>
+      </div>
+      <div class="cat-card reveal reveal-delay-2">
+        <img class="cat-img" src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=450&h=380&fit=crop&crop=center" alt="Fashion">
+        <div class="cat-overlay">
+          <span class="cat-label">Statement Pieces</span>
+          <div class="cat-name">Fashion Footwear</div>
+          <span class="cat-cta">Shop Now →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-tag">Reviews</p>
+      <h2 class="section-title">What Customers <em>Say</em></h2>
+    </div>
+    <div class="testimonials-wrapper reveal reveal-delay-1">
+      <div class="testimonial-nav">
+        <div class="testi-dot active" onclick="showTestimonial(0, this)">
+          <div class="testi-dot-name">Amina K.</div>
+          <div class="testi-dot-label">Fashion Blogger, Nairobi</div>
+        </div>
+        <div class="testi-dot" onclick="showTestimonial(1, this)">
+          <div class="testi-dot-name">Brian O.</div>
+          <div class="testi-dot-label">Working Professional</div>
+        </div>
+        <div class="testi-dot" onclick="showTestimonial(2, this)">
+          <div class="testi-dot-name">Cynthia M.</div>
+          <div class="testi-dot-label">Streetwear Enthusiast</div>
+        </div>
+      </div>
+      <div class="testimonial-cards">
+        <div class="testi-card active">
+          <p class="testi-quote">Pacifia Sole Hub completely transformed my wardrobe. The quality is unmatched at this price point — I get compliments every single day on my sneakers. These aren't just shoes, they're conversation starters.</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face" alt="Amina K.">
+            <div>
+              <div class="testi-name">Amina K.</div>
+              <div class="testi-role">Fashion Blogger, Nairobi</div>
+              <div class="stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <p class="testi-quote">I needed formal shoes for work that wouldn't break the bank. Pacifia delivered beyond expectations — the Oxford Classics look expensive, feel comfortable all day, and have held up perfectly for months.</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Brian O.">
+            <div>
+              <div class="testi-name">Brian O.</div>
+              <div class="testi-role">Working Professional</div>
+              <div class="stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <p class="testi-quote">The Converse-style drops from Pacifia are fire. I always find something fresh and unique that no one else is wearing. Fast delivery, great packaging, and the customer service team is so helpful!</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1494790108755-2616b5c23f5e?w=100&h=100&fit=crop&crop=face" alt="Cynthia M.">
+            <div>
+              <div class="testi-name">Cynthia M.</div>
+              <div class="testi-role">Streetwear Enthusiast</div>
+              <div class="stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section id="cta-banner">
+  <div class="container">
+    <p class="cta-tag">Limited Time</p>
+    <h2 class="cta-title">Step Into Your Best Self</h2>
+    <p class="cta-sub">New arrivals drop every week. Be the first to know and get exclusive early access to our latest collections.</p>
+    <a href="#contact" class="btn-white">Shop the Collection</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-tag">Get In Touch</p>
+      <h2 class="section-title">Let's <em>Connect</em></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="reveal reveal-delay-1">
+        <p style="color:rgba(251,245,238,0.6); line-height:1.8; margin-top:1rem">Have a question, want to place an order, or just want to say hi? We'd love to hear from you. Reach out through any of the channels below.</p>
+        <div class="contact-info-list">
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div class="contact-item-text">
+              <strong>Location</strong>
+              <span>Nairobi, Kenya</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📱</div>
+            <div class="contact-item-text">
+              <strong>Phone / WhatsApp</strong>
+              <span>Available on Request</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div class="contact-item-text">
+              <strong>Email</strong>
+              <span>info@pacifiasolehub.co.ke</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem">
+          <p style="color:rgba(251,245,238,0.5); font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.75rem">Follow Us</p>
+          <div class="social-links">
+            <a href="#" class="social-btn" title="Instagram">📸</a>
+            <a href="#" class="social-btn" title="Facebook">📘</a>
+            <a href="#" class="social-btn" title="TikTok">🎵</a>
+            <a href="#" class="social-btn" title="WhatsApp">💬</a>
+          </div>
+          <p style="color:rgba(251,245,238,0.35); font-size:0.78rem; margin-top:0.75rem">@PacifiaSoleHub</p>
+        </div>
+      </div>
+      <form class="contact-form reveal reveal-delay-2" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Jane" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Doe" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="jane@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>I'm Interested In</label>
+          <select>
+            <option>Sneakers</option>
+            <option>Official Shoes</option>
+            <option>Casual Shoes</option>
+            <option>Converse Style</option>
+            <option>Fashion Footwear</option>
+            <option>General Inquiry</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell us what you're looking for..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="align-self:flex-start; border:none">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=80&h=80&fit=crop&crop=center" alt="Pacifia Sole Hub">
+          <span class="footer-logo-text">Pacifia Sole Hub</span>
+        </div>
+        <p>Walk Bold. Live Bright. Your trusted footwear destination in Nairobi, Kenya — where style meets comfort at every step.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#">Sneakers</a></li>
+          <li><a href="#">Official Shoes</a></li>
+          <li><a href="#">Casual Shoes</a></li>
+          <li><a href="#">Fashion Footwear</a></li>
+          <li><a href="#">Unisex Collection</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#">Our Vision</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">Returns Policy</a></li>
+          <li><a href="#">Shipping Info</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Pacifia Sole Hub. All rights reserved.</span>
+      <span>Made with ❤️ in <a href="#">Nairobi, Kenya</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Custom Cursor
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      cursorRing.style.left = e.clientX + 'px';
+      cursorRing.style.top = e.clientY + 'px';
+    }, 80);
+  });
+  document.querySelectorAll('a, button, .product-card, .cat-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+      cursor.style.background = 'rgba(181,69,27,0.5)';
+      cursorRing.style.transform = 'translate(-50%, -50%) scale(1.5)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+      cursor.style.background = 'var(--rust)';
+      cursorRing.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
+  });
+
+  // Mobile Nav
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileClose = document.getElementById('mobileClose');
+  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+  mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  function closeMobile() { mobileMenu.classList.remove('open'); }
+
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Testimonials
+  function showTestimonial(index, dotEl) {
+    document.querySelectorAll('.testi-card').forEach((c, i) => {
+      c.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.testi-dot').forEach(d => d.classList.remove('active'));
+    dotEl.classList.add('active');
+  }
+  // Auto-rotate testimonials
+  let testiIndex = 0;
+  setInterval(() => {
+    testiIndex = (testiIndex + 1) % 3;
+    const dots = document.querySelectorAll('.testi-dot');
+    showTestimonial(testiIndex, dots[testiIndex]);
+  }, 5000);
+
+  // Product Filter
+  function filterProducts(btn, cat) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.product-card').forEach(card => {
+      const match = cat === 'all' || card.dataset.cat === cat;
+      card.style.display = match ? 'block' : 'none';
+      if (match) {
+        card.style.animation = 'fadeUp 0.4s ease both';
+      }
+    });
+  }
+
+  // Form Submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = '✓ Message Sent!';
+    btn.style.background = '#2D6A4F';
+    setTimeout(() => {
+      btn.textContent = 'Send Message →';
+      btn.style.background = '';
+      e.target.reset();
+    }, 3000);
+  }
+
+  // Smooth hover on hero image
+  const heroImg = document.querySelector('.hero-img-main');
+  if (heroImg) {
+    const heroRight = document.querySelector('.hero-right');
+    heroRight.addEventListener('mousemove', e => {
+      const rect = heroRight.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      heroImg.style.transform = `scale(1.05) translate(${x * 10}px, ${y * 10}px)`;
+    });
+    heroRight.addEventListener('mouseleave', () => {
+      heroImg.style.transform = 'scale(1.05)';
+    });
+  }
+</script>
+</body>
+</html>
